@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biodata</title>
+</head>
+
+<body>
+    <h1 id="text-nama">Jansen Wiratama</h1>
+    <h1 id="text-domisili">Tangerang</h1>
+
+    <form>
+        <input type="text" id="input-nama" placeholder="input nama anda">
+        <input type="text" id="input-domisili" placeholder="input domisili anda">
+        <button id="btn-submit" onclick="handleSubmit(event)">Submit</button>
+    </form>
+
+    <form>
+        <input type="'text" id="input-aktifitas" placeholder="input aktifitas anda">
+        <button id="btn-submit2" onclick="addActivity(event)">Tambah Aktifitas</button>
+    </form>
+
+    <button id="btn-reset" onclick="handleReset(event)">Reset</button>
+
+    <ul id="list-aktifitas"></ul>
+    <script>
+        let nama = localStorage.getItem('nama')
+        let domisili = localStorage.getItem('domisili')
+        let textNama = document.getElementById('text-nama')
+        let textDomisili = document.getElementById('text-domisili')
+        let inputNama = document.getElementById('input-nama')
+        let inputDomisili = document.getElementById('input-domisili')
+        let listActivity = localStorage.getItem('listActivity')
+        let parseList = []
+        if (listActivity) {
+            parseList = JSON.parse(listActivity)
+            parseList.forEach(activity => {
+                let newActivity = document.createElement('li')
+                newActivity.textContent = activity.activity
+                document.getElementById('list-aktifitas').append(newActivity)
+            })
+        }
+
+        if (nama) {
+            textNama.innerText = nama
+        }
+        if (domisili) {
+            textDomisili.innerText = domisili
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault()
+            textNama.innerText = inputNama.value
+            textDomisili.innerText = inputDomisili.value
+            localStorage.setItem('nama', inputNama.value)
+            localStorage.setItem('domisili', inputDomisili.value)
+        }
+        function handleReset(event) {
+            event.preventDefault()
+            // localStorage.removeItem('nama')
+            // localStorage.removeItem('domisili')
+            localStorage.clear()
+            textNama.innerText = 'Jansen Wiratama'
+            textDomisili.innerText = 'Tangerang'
+            inputNama.value = null
+            inputDomisili.value = null
+        }
+
+        function addActivity(event) {
+            event.preventDefault()
+            let inputAktifitas = document.getElementById('input-aktifitas')
+            if (!inputAktifitas.value) {
+                console.log('Tidak ada input');
+                return;
+            }
+
+            listActivity = localStorage.getItem('listActivity')
+            parseList = []
+            if (listActivity) {
+                parseList = JSON.parse(listActivity)
+            }
+            console.log(listActivity, 'list activity');
+            let activity = {
+                id: parseList.length > 0 ? parseList.length + 1 : 1,
+                activity: inputAktifitas.value
+            }
+            parseList.push(activity)
+            localStorage.setItem('listActivity', JSON.stringify(parseList))
+            let newActivity = document.createElement('li')
+            newActivity.textContent = inputAktifitas.value
+            document.getElementById('list-aktifitas').append(newActivity)
+        }
+    </script>
+</body>
+
+</html>
